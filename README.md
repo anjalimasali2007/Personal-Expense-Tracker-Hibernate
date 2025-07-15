@@ -7,7 +7,11 @@
 
 # 💸 Personal Expense Tracker Hibernate
 
-🚀 Features
+## Introduction
+ The Personal Expense Tracker is a simple console-based Java application that helps users record, view, and delete daily expenses.
+
+## 🚀 Features
+
 ✅ Add New Expense – Date, amount, category, and description
 
 🔍 View All Expenses – Display expenses in a table format
@@ -18,10 +22,10 @@
 
 
 
-💾 Data Storage – PostgreSQL database 
+## 💾 Data Storage – PostgreSQL database 
 
 
-🛠️ Technologies Used
+## 🛠️ Technologies Used
 
 
 
@@ -36,7 +40,7 @@
 🧰 IntelliJ	IDE
 
 
-📦 Prerequisites
+## 📦 Prerequisites
 
 Java JDK 8+
 
@@ -63,19 +67,19 @@ PersonalExpenseTrackerHibernate/
 └── src/
     └── main/
         ├── java/
-        │   └── com/tracker/
+        │   └── org/Example/
         │       ├── Main.java
-        │       ├── HibernateUtil.java  
-        │       ├── model/
-        │       │   └── Expense.java
-        │       ├── dao/
-        │       │   └── ExpenseDAO.java  
+        │       ├── dao/ExpenseDAO.java
+        │       │   └── model/Expense.java
         └── resources/
-                └── hibernate.cfg.xml
+                └── META-INF/
+                     └── persistence.xml
+                    
+
       
           
         
-## 🧩 Dependencies (`pom.xml`)
+##  Dependencies (pom.xml)
 
 ```xml
 <dependencies>
@@ -89,8 +93,41 @@ PersonalExpenseTrackerHibernate/
       <artifactId>hibernate-core</artifactId>
       <version>7.0.5.Final</version>
   </dependency>
+ <dependency>
+      <groupId>jakarta.persistence</groupId>
+      <artifactId>jakarta.persistence-api</artifactId>
+      <version>3.2.0</version>
+ </dependency>
 </dependencies>
 ```
+
+## 🧩 Persistence.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
+                                 https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+<persistence-unit name="ExpenseTracker" transaction-type="RESOURCE_LOCAL">
+
+    <class>org.Example.model.Expense</class>
+
+    <properties>
+        <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/testDB"/>
+        <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+        <property name="jakarta.persistence.jdbc.password" value="root"/>
+        <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+
+        <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+        <property name="hibernate.hbm2ddl.auto" value="update"/>
+        <property name="hibernate.show_sql" value="false"/>
+        <property name="hibernate.format_sql" value="false"/>
+    </properties>
+</persistence-unit>
+</persistence>
+
+
 
 
 ## Screenshots
