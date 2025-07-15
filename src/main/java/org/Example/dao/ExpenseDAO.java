@@ -1,44 +1,57 @@
 package org.Example.dao;
 
-import org.Example.HibernateUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Persistence;
 import org.Example.model.Expense;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import java.util.List;
 
 public class ExpenseDAO {
 
+    public static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("ExpenseTracker");
+
     public void addExpense(Expense e){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = session.beginTransaction();
-        session.persist(e);
-        tx.commit();
-        session.close();
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction t = em.getTransaction();
+
+        try{
+            t.begin();
+            em.persist(e);
+            t.commit();
+        }catch(Exception ex)  {
+            if(t.isActive()) t.rollback();
+        }finally {
+            em.close();
+        }
     }
 
     public List<Expense> getAllExpense(){
-        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("FROM Expense",Expense.class).list();
+        EntityManager em = emf.createEntityManager();
+        try{
+            return em.createQuery("FROM Expense",Expense.class).getResultList();
+        }finally {
+            em.close();
         }
     }
 
     public void deleteExpense(int id){
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction t = em.getTransaction();
 
-        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction tx = session.beginTransaction();
-            Expense e = session.find(Expense.class,id);
-            if(e != null) {
-                session.remove(e);
-                tx.commit();
-                System.out.println("Expense deleted with id " + id );
-            } else {
-                System.out.println("Id not found");
-                tx.rollback();
+        try{
+            t.begin();
+            Expense e = em.find(Expense.class,id);
+            if(e != null){
+                em.remove(e);
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            t.commit();
+        }catch (Exception ex){
+            if (t.isActive()) t.rollback();
+            ex.printStackTrace();
+        }finally {
+            em.close();
         }
     }
 }

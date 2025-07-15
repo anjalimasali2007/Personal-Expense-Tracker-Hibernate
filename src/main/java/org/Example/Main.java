@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
-
 public class Main {
     public static void main(String[] args) {
         ExpenseDAO dao = new ExpenseDAO();
@@ -65,8 +64,6 @@ public class Main {
                     System.out.println("Invalid choice");
                 }
             }
-
         }
-
     }
 }
